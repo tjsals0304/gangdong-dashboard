@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<!--
+================================================================================
+  강동교회 4월개강 준비현황 대시보드 — 인계용 HTML
+  신43(2026). 4. 15.(수) 기준 | 작성: 교회총무 이선민
+
+  [새 대화에서 이 파일 사용법]
+  1. 이 파일(.html)을 Claude에 업로드
+  2. 아래 명령어를 입력:
+     "이 HTML 파일로 오늘 날짜 기준 대시보드 이미지 만들어줘.
+      수치 변경사항: 따기 XXX명, 실복방 XXX명, 신카 XXX명"
+  3. Claude가 수치를 업데이트하고 PNG 이미지로 변환해줌
+
+  [수치 위치]
+  이 파일에서 수정할 항목은 아래 항목들:
+  - 따기 699명  →  최신 따기 수치로 교체
+  - 실복방 302명 → 최신 실복방으로 교체
+  - 신카 270명  → 최신 신카접수로 교체
+  - 예상등록 210명 → 계산값으로 교체
+  - 부서별(자문/장년/부녀/청년) 따기·실복·신카 수치
+  - 지파 신카 달성률 표 수치
+  - 날짜: 4. 15.(수) → 해당 날짜로 교체
+
+  [이미지 변환 명령]
+  수치 업데이트 후 PNG 변환 명령:
+  "이 HTML을 5배 고화질 PNG로 변환해줘"
+
+  [관련 파일]
+  - gangdong_handover_v8.md : 전체 맥락 (1952줄)
+  - 강동_인계데이터_v9.xlsx : 핵심 수치 데이터
+  - 강동_인계문서_v9.docx   : 종합 인계 워드
+================================================================================
+-->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>4월 개강 준비 현황</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0f2f5;font-size:12.5px;color:#222;padding:13px}
+.hd{background:#1a6e2e;color:#fff;border-radius:9px;padding:12px 18px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:flex-start}
+.hd-l h1{font-size:19px;font-weight:700;margin-bottom:3px}
+.hd-l .sub{font-size:11px;opacity:.85}
+.hd-r{text-align:right;font-size:11px;opacity:.88;line-height:1.85}
+.stitle{font-size:11.5px;font-weight:700;color:#1a6e2e;padding:5px 0 6px;display:flex;align-items:center;gap:5px}
+.stitle::before{content:'';display:inline-block;width:3px;height:13px;background:#1a6e2e;border-radius:2px;flex-shrink:0}
+.card{background:#fff;border-radius:9px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,.09);margin-bottom:9px}
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px}
+.kpi{background:#fff;border-radius:9px;padding:13px 14px;box-shadow:0 1px 4px rgba(0,0,0,.09)}
+.kpi-lbl{font-size:10px;color:#777;margin-bottom:4px}
+.kpi-val{font-size:27px;font-weight:700;line-height:1.1;margin-bottom:3px}
+.kpi-sub{font-size:10px;color:#888}
+.kpi-note{font-size:10px;font-weight:700;margin-top:4px}
+.grn{color:#1a6e2e}.blu{color:#1565C0}.org{color:#E65100}.red{color:#B71C1C}.pur{color:#7B1FA2}
+.judge{border-radius:9px;padding:10px 14px;margin-bottom:9px;font-size:11px;line-height:1.95}
+.judge .jt{font-size:12px;font-weight:700;margin-bottom:3px}
+.judge-ok{background:#e8f5e9;border:1px solid #a5d6a7}
+.judge-ok .jt{color:#1a6e2e}
+.pf{display:flex;align-items:center;gap:5px;margin-bottom:11px;flex-wrap:wrap}
+.pb{border-radius:7px;padding:7px 15px;color:#fff;text-align:center;font-weight:700}
+.pb .pv{font-size:17px;line-height:1.2}.pb .pl{font-size:10px;opacity:.9}
+.pa{color:#999;font-size:14px}
+.pb-g{background:#1a6e2e}.pb-p{background:#7B1FA2}.pb-r{background:#c0392b}.pb-o{background:#e67e22}
+.pb-blu{background:#1565C0}
+.br{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.bl{width:68px;font-size:11px;color:#555;text-align:right;flex-shrink:0}
+.bw{flex:1;background:#e0e0e0;border-radius:4px;height:21px;position:relative;overflow:hidden}
+.bf{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap}
+.bp{width:52px;text-align:right;font-size:11px;font-weight:700;flex-shrink:0}
+.bfoot{font-size:10px;color:#888;margin-top:4px;padding-left:75px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{background:#1a6e2e;color:#fff;padding:5px 8px;text-align:center;font-weight:600}
+.tbl th.tL{text-align:left}
+.tbl td{padding:5px 8px;border-bottom:.5px solid #e8e8e8;text-align:center}
+.tbl td.tL{text-align:left;font-weight:500}
+.tbl tr.hi td{background:#e8f5e9;font-weight:700;color:#1a6e2e}
+.tbl tr:last-child td{border-bottom:none}
+.tag{font-size:9px;color:#aaa;background:#f5f5f5;padding:1px 5px;border-radius:7px}
+.tag-g{font-size:9px;color:#1a6e2e;background:#e8f5e9;padding:1px 5px;border-radius:7px;font-weight:600}
+.tag-b{font-size:9px;color:#1565C0;background:#E3F2FD;padding:1px 5px;border-radius:7px;font-weight:600}
+.tag-r{font-size:9px;color:#B71C1C;background:#FFEBEE;padding:1px 5px;border-radius:7px;font-weight:600}
+.ana3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.abox{background:#fff;border-radius:9px;padding:11px 13px;box-shadow:0 1px 4px rgba(0,0,0,.09)}
+.abox .at{font-size:11px;font-weight:700;margin-bottom:5px}
+.abox .al{font-size:11px;line-height:2.0;color:#333}
+.new-badge{display:inline-block;font-size:9px;background:#1565C0;color:#fff;padding:1px 6px;border-radius:5px;margin-left:6px;font-weight:600}
+.up{color:#1a6e2e;font-size:10px;font-weight:700}
+.diff{font-size:10px;color:#1a6e2e;background:#e8f5e9;padding:1px 5px;border-radius:5px;font-weight:600}
+.diff-warn{font-size:10px;color:#E65100;background:#FFF8E1;padding:1px 5px;border-radius:5px;font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="hd">
+  <div class="hd-l">
+    <h1>4월 개강 준비 현황</h1>
+    <div class="sub">신43(2026). 4. 15.(수) · D-14 신카접수 시작 | 4/15 기준</div>
+  </div>
+  <div class="hd-r">
+    신43(2026) 4월 개강<br>
+    신카 목표 <b>254명</b> &nbsp;|&nbsp; <b style="color:#90EE90">신카 목표 달성!</b>
+  </div>
+</div>
+
+<!-- ① 핵심 수치 -->
+<div class="stitle">① 핵심 수치</div>
+<div class="kpi4">
+  <div class="kpi">
+    <div class="kpi-lbl">따기 (전도 대상 발굴)</div>
+    <div class="kpi-val grn">699명</div>
+    <div class="kpi-sub">재적대비 13.7%</div>
+    <div class="kpi-note grn">▲ +94명 (4/14 605명)</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">실복음방 연결</div>
+    <div class="kpi-val blu">302명</div>
+    <div class="kpi-sub">따기 대비 43.2%</div>
+    <div class="kpi-note grn">▲ +80명 · 목표 300명 달성!</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">신카 목표 / 현접수</div>
+    <div class="kpi-val grn">270명</div>
+    <div class="kpi-sub">목표 254명 대비</div>
+    <div class="kpi-note grn">🎉 106.3% 초과달성!</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-lbl">예상 등록</div>
+    <div class="kpi-val org">210명</div>
+    <div class="kpi-sub">재적대비 4.1%</div>
+    <div class="kpi-note blu">5월말 지파 3위 확정 예상</div>
+  </div>
+</div>
+
+<!-- 판정 -->
+<div class="judge judge-ok">
+  <div class="jt">🎉 D-14 신카 목표 초과달성! — 신카 270명 / 목표 254명 (106.3%)</div>
+  따기 <b>699명</b>(재적대비 13.7%) &nbsp;|&nbsp; 실복방 <b>302명</b>(목표 300명 달성 ✅) &nbsp;|&nbsp; 신카 <b>270명</b>(목표 초과 +16명) &nbsp;|&nbsp; 예상등록 <b>210명</b>(4.1%)<br>
+  부서별: 부녀 <b>47%</b> ✅ &nbsp; 청년 <b>72%</b> ✅ &nbsp; 장년 <b>25%</b> ⚠ &nbsp; 자문 <b>0%</b> ⚠ 집중 필요
+</div>
+
+<!-- ② 파이프라인 -->
+<div class="stitle">② 전도 파이프라인 — 따기 → 복방 → 신카 → 등록</div>
+<div class="card">
+  <div class="pf">
+    <div class="pb pb-g"><div class="pv">699명</div><div class="pl">따기</div></div>
+    <div class="pa">▶</div>
+    <div class="pb pb-p"><div class="pv">463명</div><div class="pl">복방누계</div></div>
+    <div class="pa">▶</div>
+    <div class="pb pb-p"><div class="pv">302명</div><div class="pl">실복방</div></div>
+    <div class="pa">▶</div>
+    <div class="pb pb-blu"><div class="pv">270명</div><div class="pl">신카접수</div></div>
+    <div class="pa">▶</div>
+    <div class="pb pb-o"><div class="pv">210명</div><div class="pl">예상등록</div></div>
+  </div>
+  <div class="br"><span class="bl">따기</span><div class="bw"><div class="bf" style="width:100%;background:#1a6e2e">699명</div></div><span class="bp grn">100%</span></div>
+  <div class="br"><span class="bl">복방누계</span><div class="bw"><div class="bf" style="width:66.2%;background:#7B1FA2">463명</div></div><span class="bp pur">66.2%</span></div>
+  <div class="br"><span class="bl">실복방</span><div class="bw"><div class="bf" style="width:43.2%;background:#5C1F92">302명 (목표300명 달성✅)</div></div><span class="bp pur">43.2%</span></div>
+  <div class="br"><span class="bl">신카접수</span><div class="bw"><div class="bf" style="width:100%;background:#1565C0">270명 — 목표254명 초과달성 🎉</div></div><span class="bp blu">106.3%</span></div>
+  <div class="br"><span class="bl">예상등록</span><div class="bw"><div class="bf" style="width:77.8%;background:#e67e22">210명</div></div><span class="bp org">30.0%</span></div>
+  <div class="bfoot">* 신카 = 수강신청서(개강 후 D+7 마감). 신카 수치가 최종 등록의 절대 상한. 현재 270명으로 목표 초과 달성.</div>
+</div>
+
+<!-- ③ 부서별 -->
+<div class="stitle">③ 부서별 따기 → 실복방 전환율 + 신카 접수 현황</div>
+<div class="card">
+  <!-- 자문 -->
+  <div class="br"><span class="bl">자문회</span><div class="bw"><div class="bf" style="width:.3%;background:#bbb"></div></div>
+    <span class="bp red">0%</span></div>
+  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px">따기 93명 중 실복 0명 ⚠ | 신카접수 68명 (신카전환율 73%)</div>
+  <!-- 장년 -->
+  <div class="br"><span class="bl">장년회</span><div class="bw"><div class="bf" style="width:25%;background:#e67e22">따기 56명 → 실복 14명</div></div>
+    <span class="bp org">25%</span></div>
+  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px">신카접수 12명 (신카전환율 21%)</div>
+  <!-- 부녀 -->
+  <div class="br"><span class="bl">부녀회</span><div class="bw"><div class="bf" style="width:47.2%;background:#1a6e2e">따기 458명 → 실복 216명</div></div>
+    <span class="bp grn">47%</span></div>
+  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px">신카접수 128명 (신카전환율 28%)</div>
+  <!-- 청년 -->
+  <div class="br"><span class="bl">청년회</span><div class="bw"><div class="bf" style="width:72.3%;background:#1565C0">따기 83명 → 실복 60명</div></div>
+    <span class="bp blu">72%</span></div>
+  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px">신카접수 60명 (신카전환율 72%)</div>
+  <div class="bfoot">전환율: 부녀·청년 40% 이상 ✅ / 자문 0% ⚠ 즉각 관리 / 장년 25% ⚠ 집중 필요 | 신카합계 270명 = 목표 초과달성</div>
+</div>
+
+<!-- ④ 타교회 비교 -->
+<div class="stitle">④ 타교회 비교 — 우리는 잘하고 있는가?</div>
+<div class="g2" style="margin-bottom:9px">
+  <div class="card" style="margin-bottom:0">
+    <div style="font-size:11px;font-weight:600;margin-bottom:6px">4월말 예상 등록률 지파 순위<br><span style="font-weight:400;color:#aaa;font-size:10px">(1~3월 누적 + 4월 예상 등록 기준)</span></div>
+    <table class="tbl">
+      <tr><th>순위</th><th class="tL">교회</th><th>등록률</th><th>특이</th></tr>
+      <tr><td>1위</td><td class="tL">평택</td><td>9.49%</td><td><span class="tag">소규모</span></td></tr>
+      <tr><td>2위</td><td class="tL">수지</td><td>8.87%</td><td><span class="tag">소규모</span></td></tr>
+      <tr><td>3위</td><td class="tL">수원</td><td>8.66%</td><td></td></tr>
+      <tr><td>4위</td><td class="tL">이천</td><td>8.50%</td><td><span class="tag">소규모</span></td></tr>
+      <tr class="hi"><td>5위</td><td class="tL">강동</td><td style="color:#1a6e2e">10.38%↑</td><td><span class="tag-b">★신카달성 반영</span></td></tr>
+      <tr><td>6위</td><td class="tL">왕십리</td><td>7.72%</td><td><span class="tag">소규모</span></td></tr>
+      <tr><td>7위</td><td class="tL">동탄</td><td>7.57%</td><td><span class="tag">소규모</span></td></tr>
+      <tr><td>8위</td><td class="tL">안산</td><td>7.22%</td><td></td></tr>
+      <tr><td>9위</td><td class="tL">과천</td><td>6.94%</td><td></td></tr>
+      <tr><td>10위</td><td class="tL">성남</td><td>6.54%</td><td></td></tr>
+      <tr><td>11위</td><td class="tL">하남</td><td>4.92%</td><td><span class="tag">소규모</span></td></tr>
+    </table>
+    <div style="font-size:10px;color:#1a6e2e;background:#e8f5e9;padding:5px 8px;border-radius:6px;margin-top:6px">
+      강동 신카 270명 달성 → 예상등록 210명 반영 시 10.38% 상향
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:0">
+    <div style="font-size:11px;font-weight:600;margin-bottom:6px">신카 달성률 지파 순위<br><span style="font-weight:400;color:#aaa;font-size:10px">(4월개강 기준 · 4/15 현황)</span></div>
+    <table class="tbl">
+      <tr><th>순위</th><th class="tL">교회</th><th>신카현/목표</th><th>달성률</th></tr>
+      <tr><td>1위</td><td class="tL">이천</td><td>50/50명</td><td style="color:#1a6e2e;font-weight:700">100%</td></tr>
+      <tr><td>1위</td><td class="tL">동탄</td><td>60/60명</td><td style="color:#1a6e2e;font-weight:700">100%</td></tr>
+      <tr><td>1위</td><td class="tL">왕십리</td><td>25/25명</td><td style="color:#1a6e2e;font-weight:700">100%</td></tr>
+      <tr class="hi"><td>★1위</td><td class="tL">강동</td><td>270/254명</td><td style="color:#1a6e2e;font-weight:700">106.3%</td></tr>
+      <tr><td>5위</td><td class="tL">평택</td><td>67/68명</td><td style="color:#1a6e2e;font-weight:700">98.5%</td></tr>
+      <tr><td>6위</td><td class="tL">성남</td><td>236/258명</td><td style="color:#E65100;font-weight:700">91.6%</td></tr>
+      <tr><td>7위</td><td class="tL">안산</td><td>70/110명</td><td style="color:#E65100;font-weight:700">63.6%</td></tr>
+      <tr><td>8위</td><td class="tL">수지</td><td>75/120명</td><td style="color:#E65100;font-weight:700">62.5%</td></tr>
+      <tr><td>9위</td><td class="tL">과천</td><td>251/423명</td><td style="color:#E65100;font-weight:700">59.3%</td></tr>
+      <tr><td>10위</td><td class="tL">수원</td><td>51/148명</td><td style="color:#B71C1C;font-weight:700">34.5%</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ⑤ 3월개강 출결 구조화 -->
+<div class="stitle">⑤ 3월개강 출결 구조화 분석 <span class="new-badge">4/15 추가</span></div>
+<div class="card">
+  <div style="font-size:11px;color:#555;margin-bottom:8px">
+    <b>수강신청서 = 개강 후 D+7 마감. 수강신청서 작성자만 센터등록 가능.</b>
+    <span style="font-size:10px">강동 3월개강 수강신청서: 139명 (등록 절대 상한)</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:8px">
+    <div style="background:#E3F2FD;border-left:4px solid #1565C0;border-radius:8px;padding:10px">
+      <div style="font-size:10px;font-weight:700;color:#1565C0;margin-bottom:3px">【양(量)】 수강신청서/재적</div>
+      <div style="font-size:18px;font-weight:700;color:#1565C0">2.58%</div>
+      <div style="font-size:9px;color:#888;margin-top:2px">131명/5,086명 · 대형교회 지파 1위</div>
+    </div>
+    <div style="background:#FFF8E1;border-left:4px solid #E65100;border-radius:8px;padding:10px">
+      <div style="font-size:10px;font-weight:700;color:#E65100;margin-bottom:3px">【질(質)】 수강신청서 대비 6일차</div>
+      <div style="font-size:18px;font-weight:700;color:#E65100">67.9%</div>
+      <div style="font-size:9px;color:#888;margin-top:2px">낙폭 −20.6%p ⚠ 지파 최대</div>
+    </div>
+    <div style="background:#E8F5E9;border-left:4px solid #1a6e2e;border-radius:8px;padding:10px">
+      <div style="font-size:10px;font-weight:700;color:#1a6e2e;margin-bottom:3px">【결과】 재적대비 예상등록</div>
+      <div style="font-size:18px;font-weight:700;color:#1a6e2e">2.38%</div>
+      <div style="font-size:9px;color:#888;margin-top:2px">121명/5,086명 · 재적 1%p=50.9명</div>
+    </div>
+  </div>
+  <table class="tbl" style="font-size:10.5px">
+    <tr><th class="tL">교회</th><th>수강/재적【양】</th><th>1일차 수강대비</th><th>6일차 수강대비</th><th>낙폭</th><th>예상등록/재적【결과】</th><th>패턴</th></tr>
+    <tr><td class="tL">수원</td><td>2.14%</td><td style="color:#1a6e2e;font-weight:700">92.2%</td><td style="color:#1a6e2e;font-weight:700">79.2%</td><td>−13.0%p</td><td>2.14%</td><td style="font-size:9px;color:#1a6e2e">✅ 질 우수·안정</td></tr>
+    <tr><td class="tL">안산</td><td>2.13%</td><td style="color:#1a6e2e;font-weight:700">87.9%</td><td>77.6%</td><td>−10.3%p</td><td>1.91%</td><td style="font-size:9px;color:#1a6e2e">✅ 회복형</td></tr>
+    <tr><td class="tL">성남</td><td>2.52%</td><td>73.3%</td><td>65.2%</td><td>−8.1%p</td><td>2.31%</td><td style="font-size:9px;color:#1a6e2e">△ 완만·안정</td></tr>
+    <tr style="background:#E8F5E9;font-weight:700;color:#1a6e2e">
+      <td class="tL">강동 ★</td><td>2.58%</td><td>88.5%</td><td style="color:#B71C1C">67.9%</td>
+      <td style="color:#B71C1C">−20.6%p</td><td>2.38%</td>
+      <td style="font-size:9px;color:#B71C1C">⚠ 낙폭 지파최대</td></tr>
+    <tr><td class="tL">수지</td><td style="color:#1a6e2e;font-weight:700">4.36%</td><td>68.1%</td><td>57.1%</td><td>−11.0%p</td><td style="color:#1a6e2e;font-weight:700">4.32%</td><td style="font-size:9px">양 많음·회수↑</td></tr>
+  </table>
+  <div style="background:#FFF8E1;border-left:3px solid #FFA726;border-radius:7px;padding:7px 11px;margin-top:7px;font-size:10.5px;color:#854F0B;line-height:1.8">
+    강동: 1일차 88.5% 출발 ✅ 지파 최고 / 이후 복귀 없이 −20.6%p 하락 ⚠. 성남(+15.6%p 회복) 대비 이탈자 복귀 구조 없음. 벤치마킹: 수원·성남
+  </div>
+</div>
+
+<!-- ⑥ 오늘의 분석 -->
+<div class="stitle">⑥ 오늘의 분석</div>
+<div class="ana3">
+  <div class="abox">
+    <div class="at grn">✅ 잘하고 있는 것</div>
+    <div class="al">
+      신카 목표 달성! 270/254명 🎉<br>
+      실복방 목표 달성! 302/300명<br>
+      부녀 전환율 47% ✅<br>
+      청년 전환율 72% ✅<br>
+      따기 699명 — 재적대비 13.7%
+    </div>
+  </div>
+  <div class="abox">
+    <div class="at" style="color:#E65100">⚠ 부족한 것</div>
+    <div class="al">
+      자문 실복방 0명<br>
+      &nbsp;&nbsp;(따기 93명 중 0명 연결)<br>
+      장년 전환율 25%<br>
+      &nbsp;&nbsp;(따기 56명 중 14명 연결)<br>
+      3월개강 수강대비 낙폭<br>
+      &nbsp;&nbsp;−20.6%p (지파 최대)
+    </div>
+  </div>
+  <div class="abox">
+    <div class="at" style="color:#1565C0">📌 다음 과제</div>
+    <div class="al">
+      신카 270명 → 개강 후 출석 관리<br>
+      (수강신청서 마감 D+7까지)<br>
+      자문·장년 실복방 집중 관리<br>
+      4월 개강 출석 유지 구조<br>
+      &nbsp;&nbsp;(성남·수원 복귀 구조 벤치마킹)<br>
+      5월말 지파 3위 확정 목표
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
