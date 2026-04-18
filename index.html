@@ -1,43 +1,32 @@
 <!DOCTYPE html>
-<!--
-================================================================================
-  강동교회 4월개강 준비현황 대시보드 — 인계용 HTML
-  신43(2026). 4. 15.(수) 기준 | 작성: 교회총무 이선민
-
-  [새 대화에서 이 파일 사용법]
-  1. 이 파일(.html)을 Claude에 업로드
-  2. 아래 명령어를 입력:
-     "이 HTML 파일로 오늘 날짜 기준 대시보드 이미지 만들어줘.
-      수치 변경사항: 따기 XXX명, 실복방 XXX명, 신카 XXX명"
-  3. Claude가 수치를 업데이트하고 PNG 이미지로 변환해줌
-
-  [수치 위치]
-  이 파일에서 수정할 항목은 아래 항목들:
-  - 따기 699명  →  최신 따기 수치로 교체
-  - 실복방 302명 → 최신 실복방으로 교체
-  - 신카 270명  → 최신 신카접수로 교체
-  - 예상등록 210명 → 계산값으로 교체
-  - 부서별(자문/장년/부녀/청년) 따기·실복·신카 수치
-  - 지파 신카 달성률 표 수치
-  - 날짜: 4. 15.(수) → 해당 날짜로 교체
-
-  [이미지 변환 명령]
-  수치 업데이트 후 PNG 변환 명령:
-  "이 HTML을 5배 고화질 PNG로 변환해줘"
-
-  [관련 파일]
-  - gangdong_handover_v8.md : 전체 맥락 (1952줄)
-  - 강동_인계데이터_v9.xlsx : 핵심 수치 데이터
-  - 강동_인계문서_v9.docx   : 종합 인계 워드
-================================================================================
--->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>4월 개강 준비 현황</title>
+<title>4월 개강 준비 현황 — 강동교회</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0f2f5;font-size:12.5px;color:#222;padding:13px}
+
+/* ── 업로드 바 ── */
+.upload-bar{background:#fff;border:2px dashed #1a6e2e;border-radius:9px;padding:10px 16px;margin-bottom:9px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn-upload{background:#1a6e2e;color:#fff;border:none;border-radius:7px;padding:8px 18px;font-size:13px;cursor:pointer;font-weight:700;font-family:inherit}
+.btn-github{background:#24292e;color:#fff;border:none;border-radius:7px;padding:8px 18px;font-size:13px;cursor:pointer;font-weight:700;font-family:inherit;display:none}
+.btn-set{background:#f5f5f5;color:#333;border:1px solid #ddd;border-radius:7px;padding:8px 12px;font-size:13px;cursor:pointer;font-family:inherit;margin-left:auto}
+#file-input{display:none}
+#status{font-size:12px;color:#555}
+
+/* ── 모달 ── */
+.modal-bg{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}
+.modal{background:#fff;border-radius:12px;padding:22px;max-width:380px;margin:120px auto;box-shadow:0 8px 30px rgba(0,0,0,.2)}
+.modal h3{margin-bottom:14px;font-size:15px;color:#1a6e2e}
+.modal input{width:100%;padding:9px;border:1px solid #ddd;border-radius:7px;font-size:13px;margin:5px 0 14px;font-family:inherit}
+.modal-btns{display:flex;gap:8px}
+.modal-btns button{border:none;border-radius:7px;padding:9px 18px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit}
+.btn-save{background:#1a6e2e;color:#fff}
+.btn-cancel{background:#f5f5f5;color:#333;border:1px solid #ddd!important;border:none}
+
+/* ── 기존 대시보드 스타일 ── */
 .hd{background:#1a6e2e;color:#fff;border-radius:9px;padding:12px 18px;margin-bottom:9px;display:flex;justify-content:space-between;align-items:flex-start}
 .hd-l h1{font-size:19px;font-weight:700;margin-bottom:3px}
 .hd-l .sub{font-size:11px;opacity:.85}
@@ -57,15 +46,14 @@ body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0
 .judge-ok{background:#e8f5e9;border:1px solid #a5d6a7}
 .judge-ok .jt{color:#1a6e2e}
 .pf{display:flex;align-items:center;gap:5px;margin-bottom:11px;flex-wrap:wrap}
-.pb{border-radius:7px;padding:7px 15px;color:#fff;text-align:center;font-weight:700}
+.pb{border-radius:7px;padding:7px 15px;color:#fff;text-align:center;font-weight:700;min-width:80px}
 .pb .pv{font-size:17px;line-height:1.2}.pb .pl{font-size:10px;opacity:.9}
 .pa{color:#999;font-size:14px}
-.pb-g{background:#1a6e2e}.pb-p{background:#7B1FA2}.pb-r{background:#c0392b}.pb-o{background:#e67e22}
-.pb-blu{background:#1565C0}
+.pb-g{background:#1a6e2e}.pb-p{background:#7B1FA2}.pb-r{background:#c0392b}.pb-o{background:#e67e22}.pb-blu{background:#1565C0}
 .br{display:flex;align-items:center;gap:7px;margin-bottom:5px}
 .bl{width:68px;font-size:11px;color:#555;text-align:right;flex-shrink:0}
 .bw{flex:1;background:#e0e0e0;border-radius:4px;height:21px;position:relative;overflow:hidden}
-.bf{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap}
+.bf{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:700;color:#fff;white-space:nowrap;transition:width .4s ease}
 .bp{width:52px;text-align:right;font-size:11px;font-weight:700;flex-shrink:0}
 .bfoot{font-size:10px;color:#888;margin-top:4px;padding-left:75px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
@@ -85,106 +73,117 @@ body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0
 .abox .at{font-size:11px;font-weight:700;margin-bottom:5px}
 .abox .al{font-size:11px;line-height:2.0;color:#333}
 .new-badge{display:inline-block;font-size:9px;background:#1565C0;color:#fff;padding:1px 6px;border-radius:5px;margin-left:6px;font-weight:600}
-.up{color:#1a6e2e;font-size:10px;font-weight:700}
-.diff{font-size:10px;color:#1a6e2e;background:#e8f5e9;padding:1px 5px;border-radius:5px;font-weight:600}
-.diff-warn{font-size:10px;color:#E65100;background:#FFF8E1;padding:1px 5px;border-radius:5px;font-weight:600}
 </style>
 </head>
 <body>
 
-<!-- 헤더 -->
-<div class="hd">
-  <div class="hd-l">
-    <h1>4월 개강 준비 현황</h1>
-    <div class="sub">신43(2026). 4. 15.(수) · D-14 신카접수 시작 | 4/15 기준</div>
-  </div>
-  <div class="hd-r">
-    신43(2026) 4월 개강<br>
-    신카 목표 <b>254명</b> &nbsp;|&nbsp; <b style="color:#90EE90">신카 목표 달성!</b>
+<!-- ★ 업로드 바 -->
+<div class="upload-bar">
+  <input type="file" id="file-input" accept=".xlsx,.xls">
+  <button class="btn-upload" onclick="document.getElementById('file-input').click()">📂 엑셀 파일 열기</button>
+  <button class="btn-github" id="github-btn">🚀 GitHub 저장</button>
+  <span id="status">엑셀 파일을 선택하면 자동으로 수치가 업데이트됩니다</span>
+  <button class="btn-set" onclick="showSettings()">⚙️ 설정</button>
+</div>
+
+<!-- ★ 설정 모달 -->
+<div class="modal-bg" id="modal" onclick="if(event.target===this)hideSettings()">
+  <div class="modal">
+    <h3>⚙️ GitHub 설정</h3>
+    <label style="font-size:11px;color:#777">Personal Access Token</label>
+    <input type="password" id="token-inp" placeholder="ghp_xxxxxxxxxxxx">
+    <div class="modal-btns">
+      <button class="btn-save" onclick="saveToken()">저장</button>
+      <button class="btn-cancel" onclick="hideSettings()" style="background:#f5f5f5;border:1px solid #ddd">취소</button>
+    </div>
   </div>
 </div>
 
-<!-- ① 핵심 수치 -->
+<!-- ── 헤더 -->
+<div class="hd">
+  <div class="hd-l">
+    <h1>4월 개강 준비 현황</h1>
+    <div class="sub">신43(2026). <span data-f="date">4. 15.(수)</span> · D-14 신카접수 시작 | <span data-f="date">4/15</span> 기준</div>
+  </div>
+  <div class="hd-r">
+    신43(2026) 4월 개강<br>
+    신카 목표 <b>254명</b> &nbsp;|&nbsp; <b style="color:#90EE90" data-f="shinka-status">신카 목표 달성!</b>
+  </div>
+</div>
+
+<!-- ── ① 핵심 수치 -->
 <div class="stitle">① 핵심 수치</div>
 <div class="kpi4">
   <div class="kpi">
     <div class="kpi-lbl">따기 (전도 대상 발굴)</div>
-    <div class="kpi-val grn">699명</div>
-    <div class="kpi-sub">재적대비 13.7%</div>
-    <div class="kpi-note grn">▲ +94명 (4/14 605명)</div>
+    <div class="kpi-val grn" data-f="ddakgi-val">779명</div>
+    <div class="kpi-sub" data-f="ddakgi-sub">재적대비 15.3%</div>
+    <div class="kpi-note grn" data-f="ddakgi-note">▲ 전일 대비 업데이트</div>
   </div>
   <div class="kpi">
     <div class="kpi-lbl">실복음방 연결</div>
-    <div class="kpi-val blu">302명</div>
-    <div class="kpi-sub">따기 대비 43.2%</div>
-    <div class="kpi-note grn">▲ +80명 · 목표 300명 달성!</div>
+    <div class="kpi-val blu" data-f="sil-val">415명</div>
+    <div class="kpi-sub" data-f="sil-sub">따기 대비 53.3%</div>
+    <div class="kpi-note grn" data-f="sil-note">목표 300명 달성!</div>
   </div>
   <div class="kpi">
     <div class="kpi-lbl">신카 목표 / 현접수</div>
-    <div class="kpi-val grn">270명</div>
-    <div class="kpi-sub">목표 254명 대비</div>
-    <div class="kpi-note grn">🎉 106.3% 초과달성!</div>
+    <div class="kpi-val grn" data-f="shinka-val">270명</div>
+    <div class="kpi-sub" data-f="shinka-sub">목표 254명 대비 106.3%</div>
+    <div class="kpi-note grn" data-f="shinka-note">목표 초과달성!</div>
   </div>
   <div class="kpi">
     <div class="kpi-lbl">예상 등록</div>
-    <div class="kpi-val org">210명</div>
-    <div class="kpi-sub">재적대비 4.1%</div>
-    <div class="kpi-note blu">5월말 지파 3위 확정 예상</div>
+    <div class="kpi-val org" data-f="reg-val">210명</div>
+    <div class="kpi-sub" data-f="reg-sub">재적대비 4.1%</div>
+    <div class="kpi-note blu" data-f="reg-note">5월말 지파 3위 예상</div>
   </div>
 </div>
 
-<!-- 판정 -->
+<!-- ── 판정 박스 -->
 <div class="judge judge-ok">
-  <div class="jt">🎉 D-14 신카 목표 초과달성! — 신카 270명 / 목표 254명 (106.3%)</div>
-  따기 <b>699명</b>(재적대비 13.7%) &nbsp;|&nbsp; 실복방 <b>302명</b>(목표 300명 달성 ✅) &nbsp;|&nbsp; 신카 <b>270명</b>(목표 초과 +16명) &nbsp;|&nbsp; 예상등록 <b>210명</b>(4.1%)<br>
-  부서별: 부녀 <b>47%</b> ✅ &nbsp; 청년 <b>72%</b> ✅ &nbsp; 장년 <b>25%</b> ⚠ &nbsp; 자문 <b>0%</b> ⚠ 집중 필요
+  <div class="jt" data-f="judge-title">🎉 D-14 신카 목표 초과달성! — 신카 270명 / 목표 254명 (106.3%)</div>
+  <span data-f="judge-body">따기 <b>699명</b>(재적대비 13.7%) &nbsp;|&nbsp; 실복방 <b>302명</b>(목표 300명 달성 ✅) &nbsp;|&nbsp; 신카 <b>270명</b>(목표 초과) &nbsp;|&nbsp; 예상등록 <b>210명</b>(4.1%)</span><br>
+  <span data-f="judge-dept">부서별: 부녀 <b>47%</b> ✅ &nbsp; 청년 <b>72%</b> ✅ &nbsp; 장년 <b>25%</b> ⚠ &nbsp; 자문 <b>0%</b> ⚠</span>
 </div>
 
-<!-- ② 파이프라인 -->
+<!-- ── ② 파이프라인 -->
 <div class="stitle">② 전도 파이프라인 — 따기 → 복방 → 신카 → 등록</div>
 <div class="card">
   <div class="pf">
-    <div class="pb pb-g"><div class="pv">699명</div><div class="pl">따기</div></div>
+    <div class="pb pb-g"><div class="pv" data-f="pf-ddakgi">779명</div><div class="pl">따기</div></div>
     <div class="pa">▶</div>
-    <div class="pb pb-p"><div class="pv">463명</div><div class="pl">복방누계</div></div>
+    <div class="pb pb-p"><div class="pv" data-f="pf-bokbang">449명</div><div class="pl">복방누계</div></div>
     <div class="pa">▶</div>
-    <div class="pb pb-p"><div class="pv">302명</div><div class="pl">실복방</div></div>
+    <div class="pb pb-p"><div class="pv" data-f="pf-sil">415명</div><div class="pl">실복방</div></div>
     <div class="pa">▶</div>
-    <div class="pb pb-blu"><div class="pv">270명</div><div class="pl">신카접수</div></div>
+    <div class="pb pb-blu"><div class="pv" data-f="pf-shinka">270명</div><div class="pl">신카접수</div></div>
     <div class="pa">▶</div>
-    <div class="pb pb-o"><div class="pv">210명</div><div class="pl">예상등록</div></div>
+    <div class="pb pb-o"><div class="pv" data-f="pf-reg">210명</div><div class="pl">예상등록</div></div>
   </div>
-  <div class="br"><span class="bl">따기</span><div class="bw"><div class="bf" style="width:100%;background:#1a6e2e">699명</div></div><span class="bp grn">100%</span></div>
-  <div class="br"><span class="bl">복방누계</span><div class="bw"><div class="bf" style="width:66.2%;background:#7B1FA2">463명</div></div><span class="bp pur">66.2%</span></div>
-  <div class="br"><span class="bl">실복방</span><div class="bw"><div class="bf" style="width:43.2%;background:#5C1F92">302명 (목표300명 달성✅)</div></div><span class="bp pur">43.2%</span></div>
-  <div class="br"><span class="bl">신카접수</span><div class="bw"><div class="bf" style="width:100%;background:#1565C0">270명 — 목표254명 초과달성 🎉</div></div><span class="bp blu">106.3%</span></div>
-  <div class="br"><span class="bl">예상등록</span><div class="bw"><div class="bf" style="width:77.8%;background:#e67e22">210명</div></div><span class="bp org">30.0%</span></div>
-  <div class="bfoot">* 신카 = 수강신청서(개강 후 D+7 마감). 신카 수치가 최종 등록의 절대 상한. 현재 270명으로 목표 초과 달성.</div>
+  <div class="br"><span class="bl">따기</span><div class="bw"><div class="bf" id="bar-ddakgi" style="width:100%;background:#1a6e2e">779명</div></div><span class="bp grn" data-f="bar-ddakgi-pct">100%</span></div>
+  <div class="br"><span class="bl">복방누계</span><div class="bw"><div class="bf" id="bar-bokbang" style="width:57.6%;background:#7B1FA2">449명</div></div><span class="bp pur" data-f="bar-bokbang-pct">57.6%</span></div>
+  <div class="br"><span class="bl">실복방</span><div class="bw"><div class="bf" id="bar-sil" style="width:53.3%;background:#5C1F92">415명 (목표300명 달성✅)</div></div><span class="bp pur" data-f="bar-sil-pct">53.3%</span></div>
+  <div class="br"><span class="bl">신카접수</span><div class="bw"><div class="bf" id="bar-shinka" style="width:100%;background:#1565C0">270명 — 목표254명 초과달성!</div></div><span class="bp blu" data-f="bar-shinka-pct">106.3%</span></div>
+  <div class="br"><span class="bl">예상등록</span><div class="bw"><div class="bf" id="bar-reg" style="width:30%;background:#e67e22">210명</div></div><span class="bp org" data-f="bar-reg-pct">30.0%</span></div>
+  <div class="bfoot">* 신카 = 수강신청서(개강 후 D+7 마감). 신카 수치가 최종 등록의 절대 상한.</div>
 </div>
 
-<!-- ③ 부서별 -->
-<div class="stitle">③ 부서별 따기 → 실복방 전환율 + 신카 접수 현황</div>
+<!-- ── ③ 부서별 -->
+<div class="stitle">③ 부서별 따기 → 실복방 전환율</div>
 <div class="card">
-  <!-- 자문 -->
-  <div class="br"><span class="bl">자문회</span><div class="bw"><div class="bf" style="width:.3%;background:#bbb"></div></div>
-    <span class="bp red">0%</span></div>
-  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px">따기 93명 중 실복 0명 ⚠ | 신카접수 68명 (신카전환율 73%)</div>
-  <!-- 장년 -->
-  <div class="br"><span class="bl">장년회</span><div class="bw"><div class="bf" style="width:25%;background:#e67e22">따기 56명 → 실복 14명</div></div>
-    <span class="bp org">25%</span></div>
-  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px">신카접수 12명 (신카전환율 21%)</div>
-  <!-- 부녀 -->
-  <div class="br"><span class="bl">부녀회</span><div class="bw"><div class="bf" style="width:47.2%;background:#1a6e2e">따기 458명 → 실복 216명</div></div>
-    <span class="bp grn">47%</span></div>
-  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px">신카접수 128명 (신카전환율 28%)</div>
-  <!-- 청년 -->
-  <div class="br"><span class="bl">청년회</span><div class="bw"><div class="bf" style="width:72.3%;background:#1565C0">따기 83명 → 실복 60명</div></div>
-    <span class="bp blu">72%</span></div>
-  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px">신카접수 60명 (신카전환율 72%)</div>
-  <div class="bfoot">전환율: 부녀·청년 40% 이상 ✅ / 자문 0% ⚠ 즉각 관리 / 장년 25% ⚠ 집중 필요 | 신카합계 270명 = 목표 초과달성</div>
+  <div class="br"><span class="bl">자문회</span><div class="bw"><div class="bf" id="bar-ja" style="width:.3%;background:#bbb"></div></div><span class="bp red" data-f="dept-ja-pct">0%</span></div>
+  <div style="font-size:10px;color:#1a6e2e;margin:-3px 0 5px 75px" data-f="dept-ja-sub">따기 96명 → 실복 90명 ✅ 급등</div>
+  <div class="br"><span class="bl">장년회</span><div class="bw"><div class="bf" id="bar-jang" style="width:26%;background:#e67e22" data-f="dept-jang-bar">따기 57명 → 실복 15명</div></div><span class="bp org" data-f="dept-jang-pct">26%</span></div>
+  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px" data-f="dept-jang-sub">신카접수 12명</div>
+  <div class="br"><span class="bl">부녀회</span><div class="bw"><div class="bf" id="bar-bu" style="width:44.5%;background:#1a6e2e" data-f="dept-bu-bar">따기 530명 → 실복 236명</div></div><span class="bp grn" data-f="dept-bu-pct">45%</span></div>
+  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px" data-f="dept-bu-sub">신카접수 128명</div>
+  <div class="br"><span class="bl">청년회</span><div class="bw"><div class="bf" id="bar-chung" style="width:71.3%;background:#1565C0" data-f="dept-chung-bar">따기 87명 → 실복 62명</div></div><span class="bp blu" data-f="dept-chung-pct">71%</span></div>
+  <div style="font-size:10px;color:#888;margin:-3px 0 5px 75px" data-f="dept-chung-sub">신카접수 60명</div>
+  <div class="bfoot">전환율: 부녀·청년 40% 이상 ✅ / 자문 0% ⚠ / 장년 25% ⚠</div>
 </div>
 
-<!-- ④ 타교회 비교 -->
+<!-- ── ④ 타교회 비교 -->
 <div class="stitle">④ 타교회 비교 — 우리는 잘하고 있는가?</div>
 <div class="g2" style="margin-bottom:9px">
   <div class="card" style="margin-bottom:0">
@@ -195,7 +194,7 @@ body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0
       <tr><td>2위</td><td class="tL">수지</td><td>8.87%</td><td><span class="tag">소규모</span></td></tr>
       <tr><td>3위</td><td class="tL">수원</td><td>8.66%</td><td></td></tr>
       <tr><td>4위</td><td class="tL">이천</td><td>8.50%</td><td><span class="tag">소규모</span></td></tr>
-      <tr class="hi"><td>5위</td><td class="tL">강동</td><td style="color:#1a6e2e">10.38%↑</td><td><span class="tag-b">★신카달성 반영</span></td></tr>
+      <tr class="hi"><td>5위</td><td class="tL">강동</td><td style="color:#1a6e2e" data-f="rank-rate">10.38%↑</td><td><span class="tag-b" data-f="rank-tag">★신카달성 반영</span></td></tr>
       <tr><td>6위</td><td class="tL">왕십리</td><td>7.72%</td><td><span class="tag">소규모</span></td></tr>
       <tr><td>7위</td><td class="tL">동탄</td><td>7.57%</td><td><span class="tag">소규모</span></td></tr>
       <tr><td>8위</td><td class="tL">안산</td><td>7.22%</td><td></td></tr>
@@ -203,18 +202,15 @@ body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0
       <tr><td>10위</td><td class="tL">성남</td><td>6.54%</td><td></td></tr>
       <tr><td>11위</td><td class="tL">하남</td><td>4.92%</td><td><span class="tag">소규모</span></td></tr>
     </table>
-    <div style="font-size:10px;color:#1a6e2e;background:#e8f5e9;padding:5px 8px;border-radius:6px;margin-top:6px">
-      강동 신카 270명 달성 → 예상등록 210명 반영 시 10.38% 상향
-    </div>
   </div>
   <div class="card" style="margin-bottom:0">
-    <div style="font-size:11px;font-weight:600;margin-bottom:6px">신카 달성률 지파 순위<br><span style="font-weight:400;color:#aaa;font-size:10px">(4월개강 기준 · 4/15 현황)</span></div>
-    <table class="tbl">
+    <div style="font-size:11px;font-weight:600;margin-bottom:6px">신카 달성률 지파 순위<br><span style="font-weight:400;color:#aaa;font-size:10px">(4월개강 기준 · <span data-f="date2">4/16</span> 현황)</span></div>
+    <table class="tbl" id="shinka-tbl">
       <tr><th>순위</th><th class="tL">교회</th><th>신카현/목표</th><th>달성률</th></tr>
       <tr><td>1위</td><td class="tL">이천</td><td>50/50명</td><td style="color:#1a6e2e;font-weight:700">100%</td></tr>
       <tr><td>1위</td><td class="tL">동탄</td><td>60/60명</td><td style="color:#1a6e2e;font-weight:700">100%</td></tr>
       <tr><td>1위</td><td class="tL">왕십리</td><td>25/25명</td><td style="color:#1a6e2e;font-weight:700">100%</td></tr>
-      <tr class="hi"><td>★1위</td><td class="tL">강동</td><td>270/254명</td><td style="color:#1a6e2e;font-weight:700">106.3%</td></tr>
+      <tr class="hi"><td>★1위</td><td class="tL">강동</td><td data-f="tbl-shinka">270/254명</td><td style="color:#1a6e2e;font-weight:700" data-f="tbl-rate">106.3%</td></tr>
       <tr><td>5위</td><td class="tL">평택</td><td>67/68명</td><td style="color:#1a6e2e;font-weight:700">98.5%</td></tr>
       <tr><td>6위</td><td class="tL">성남</td><td>236/258명</td><td style="color:#E65100;font-weight:700">91.6%</td></tr>
       <tr><td>7위</td><td class="tL">안산</td><td>70/110명</td><td style="color:#E65100;font-weight:700">63.6%</td></tr>
@@ -225,82 +221,259 @@ body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0
   </div>
 </div>
 
-<!-- ⑤ 3월개강 출결 구조화 -->
-<div class="stitle">⑤ 3월개강 출결 구조화 분석 <span class="new-badge">4/15 추가</span></div>
-<div class="card">
-  <div style="font-size:11px;color:#555;margin-bottom:8px">
-    <b>수강신청서 = 개강 후 D+7 마감. 수강신청서 작성자만 센터등록 가능.</b>
-    <span style="font-size:10px">강동 3월개강 수강신청서: 139명 (등록 절대 상한)</span>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:8px">
-    <div style="background:#E3F2FD;border-left:4px solid #1565C0;border-radius:8px;padding:10px">
-      <div style="font-size:10px;font-weight:700;color:#1565C0;margin-bottom:3px">【양(量)】 수강신청서/재적</div>
-      <div style="font-size:18px;font-weight:700;color:#1565C0">2.58%</div>
-      <div style="font-size:9px;color:#888;margin-top:2px">131명/5,086명 · 대형교회 지파 1위</div>
-    </div>
-    <div style="background:#FFF8E1;border-left:4px solid #E65100;border-radius:8px;padding:10px">
-      <div style="font-size:10px;font-weight:700;color:#E65100;margin-bottom:3px">【질(質)】 수강신청서 대비 6일차</div>
-      <div style="font-size:18px;font-weight:700;color:#E65100">67.9%</div>
-      <div style="font-size:9px;color:#888;margin-top:2px">낙폭 −20.6%p ⚠ 지파 최대</div>
-    </div>
-    <div style="background:#E8F5E9;border-left:4px solid #1a6e2e;border-radius:8px;padding:10px">
-      <div style="font-size:10px;font-weight:700;color:#1a6e2e;margin-bottom:3px">【결과】 재적대비 예상등록</div>
-      <div style="font-size:18px;font-weight:700;color:#1a6e2e">2.38%</div>
-      <div style="font-size:9px;color:#888;margin-top:2px">121명/5,086명 · 재적 1%p=50.9명</div>
-    </div>
-  </div>
-  <table class="tbl" style="font-size:10.5px">
-    <tr><th class="tL">교회</th><th>수강/재적【양】</th><th>1일차 수강대비</th><th>6일차 수강대비</th><th>낙폭</th><th>예상등록/재적【결과】</th><th>패턴</th></tr>
-    <tr><td class="tL">수원</td><td>2.14%</td><td style="color:#1a6e2e;font-weight:700">92.2%</td><td style="color:#1a6e2e;font-weight:700">79.2%</td><td>−13.0%p</td><td>2.14%</td><td style="font-size:9px;color:#1a6e2e">✅ 질 우수·안정</td></tr>
-    <tr><td class="tL">안산</td><td>2.13%</td><td style="color:#1a6e2e;font-weight:700">87.9%</td><td>77.6%</td><td>−10.3%p</td><td>1.91%</td><td style="font-size:9px;color:#1a6e2e">✅ 회복형</td></tr>
-    <tr><td class="tL">성남</td><td>2.52%</td><td>73.3%</td><td>65.2%</td><td>−8.1%p</td><td>2.31%</td><td style="font-size:9px;color:#1a6e2e">△ 완만·안정</td></tr>
-    <tr style="background:#E8F5E9;font-weight:700;color:#1a6e2e">
-      <td class="tL">강동 ★</td><td>2.58%</td><td>88.5%</td><td style="color:#B71C1C">67.9%</td>
-      <td style="color:#B71C1C">−20.6%p</td><td>2.38%</td>
-      <td style="font-size:9px;color:#B71C1C">⚠ 낙폭 지파최대</td></tr>
-    <tr><td class="tL">수지</td><td style="color:#1a6e2e;font-weight:700">4.36%</td><td>68.1%</td><td>57.1%</td><td>−11.0%p</td><td style="color:#1a6e2e;font-weight:700">4.32%</td><td style="font-size:9px">양 많음·회수↑</td></tr>
-  </table>
-  <div style="background:#FFF8E1;border-left:3px solid #FFA726;border-radius:7px;padding:7px 11px;margin-top:7px;font-size:10.5px;color:#854F0B;line-height:1.8">
-    강동: 1일차 88.5% 출발 ✅ 지파 최고 / 이후 복귀 없이 −20.6%p 하락 ⚠. 성남(+15.6%p 회복) 대비 이탈자 복귀 구조 없음. 벤치마킹: 수원·성남
-  </div>
-</div>
-
-<!-- ⑥ 오늘의 분석 -->
-<div class="stitle">⑥ 오늘의 분석</div>
+<!-- ── ⑤ 오늘의 분석 -->
+<div class="stitle">⑤ 오늘의 분석</div>
 <div class="ana3">
   <div class="abox">
     <div class="at grn">✅ 잘하고 있는 것</div>
-    <div class="al">
-      신카 목표 달성! 270/254명 🎉<br>
-      실복방 목표 달성! 302/300명<br>
-      부녀 전환율 47% ✅<br>
-      청년 전환율 72% ✅<br>
-      따기 699명 — 재적대비 13.7%
+    <div class="al" data-f="ana-good">
+      신카 목표 달성! 270/254명 🎉<br>실복방 목표 달성! 302/300명<br>부녀 전환율 47% ✅<br>청년 전환율 72% ✅<br>따기 699명 — 재적대비 13.7%
     </div>
   </div>
   <div class="abox">
     <div class="at" style="color:#E65100">⚠ 부족한 것</div>
-    <div class="al">
-      자문 실복방 0명<br>
-      &nbsp;&nbsp;(따기 93명 중 0명 연결)<br>
-      장년 전환율 25%<br>
-      &nbsp;&nbsp;(따기 56명 중 14명 연결)<br>
-      3월개강 수강대비 낙폭<br>
-      &nbsp;&nbsp;−20.6%p (지파 최대)
+    <div class="al" data-f="ana-bad">
+      자문 실복방 0명<br>&nbsp;&nbsp;(따기 93명 중 0명 연결)<br>장년 전환율 25%<br>&nbsp;&nbsp;(따기 56명 중 14명 연결)
     </div>
   </div>
   <div class="abox">
     <div class="at" style="color:#1565C0">📌 다음 과제</div>
-    <div class="al">
-      신카 270명 → 개강 후 출석 관리<br>
-      (수강신청서 마감 D+7까지)<br>
-      자문·장년 실복방 집중 관리<br>
-      4월 개강 출석 유지 구조<br>
-      &nbsp;&nbsp;(성남·수원 복귀 구조 벤치마킹)<br>
-      5월말 지파 3위 확정 목표
+    <div class="al" data-f="ana-next">
+      자문·장년 실복방 집중 관리<br>4월 개강 출석 유지 구조<br>신카 달성 → 5월 지파 순위 확정
     </div>
   </div>
 </div>
 
+<!-- ★ JavaScript -->
+<script>
+const REPO = 'tjsals0304';
+const REPO_NAME = 'gangdong-dashboard';
+const FILE = 'index.html';
+
+// ── 토큰
+function getToken(){ return localStorage.getItem('gh_token'); }
+function saveToken(){
+  const t = document.getElementById('token-inp').value.trim();
+  if(t){ localStorage.setItem('gh_token',t); hideSettings(); setStatus('토큰 저장 완료 ✅'); }
+}
+function showSettings(){
+  document.getElementById('token-inp').value = getToken()||'';
+  document.getElementById('modal').style.display='block';
+}
+function hideSettings(){ document.getElementById('modal').style.display='none'; }
+function setStatus(m){ document.getElementById('status').textContent=m; }
+
+// ── 파일 입력 이벤트
+document.getElementById('file-input').addEventListener('change', function(e){
+  if(e.target.files[0]) loadExcel(e.target.files[0]);
+});
+
+// ── 엑셀 로드
+function loadExcel(file){
+  setStatus('⏳ 엑셀 파일 읽는 중...');
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
+      const data = extractGangdong(wb, file.name);
+      if(data){
+        updateDashboard(data);
+        document.getElementById('github-btn').style.display='';
+        document.getElementById('github-btn').onclick = ()=> pushToGitHub(data);
+        setStatus(`✅ ${data.dateStr} 데이터 업데이트 완료 — 확인 후 [🚀 GitHub 저장] 클릭`);
+      } else {
+        setStatus('❌ 강동교회 데이터를 찾을 수 없습니다. 파일을 확인해주세요.');
+      }
+    } catch(err){ setStatus('❌ 파일 읽기 오류: '+err.message); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── 강동 데이터 추출
+function extractGangdong(wb, filename){
+  // 날짜 파일명에서 추출 (예: 신43(2026).4.15(수))
+  const dateMatch = filename.match(/(\d+)\.(\d+)\((.)\)/);
+  let dateStr = '날짜';
+  if(dateMatch){
+    dateStr = `${dateMatch[1]}. ${dateMatch[2]}.(${dateMatch[3]})`;
+  }
+
+  // 통계 시트
+  const sRows = XLSX.utils.sheet_to_json(wb.Sheets['통계']||wb.Sheets[wb.SheetNames[0]], {header:1, defval:0});
+  let gRow = null;
+  for(const row of sRows){
+    if(row[2] && String(row[2]).includes('강동')){ gRow=row; break; }
+  }
+  if(!gRow) return null;
+
+  // 교회별 시트 (부서별)
+  const dRows = XLSX.utils.sheet_to_json(wb.Sheets['교회별']||wb.Sheets[wb.SheetNames[1]], {header:1, defval:0});
+  const depts = {};
+  let inG = false;
+  for(const row of dRows){
+    const ch = String(row[1]||'');
+    if(ch.includes('강동')) inG=true;
+    else if(row[1] && row[1]!==0) inG=false;
+    if(inG){
+      const d = String(row[3]||'');
+      if(d.includes('자문')) depts.자문=row;
+      else if(d.includes('장년')) depts.장년=row;
+      else if(d.includes('부녀')) depts.부녀=row;
+      else if(d.includes('청년')) depts.청년=row;
+    }
+  }
+
+  const 재적 = Number(gRow[4])||5086;
+  const 따기 = Number(gRow[20])||0;
+  const 복방 = Number(gRow[26])||0;
+  const 실복방 = Number(gRow[37])||0;
+  const 신카목표 = Number(gRow[40])||254;
+  const 신카 = Number(gRow[47])||0;
+  const 예상 = Math.round(신카 * 0.778);
+
+  const dept = (k, i) => Number((depts[k]||[])[i])||0;
+
+  return {
+    dateStr, 재적, 따기, 복방, 실복방, 신카목표, 신카, 예상,
+    자문: { 따기:dept('자문',15), 실복:dept('자문',23), 신카:dept('자문',30) },
+    장년: { 따기:dept('장년',15), 실복:dept('장년',23), 신카:dept('장년',30) },
+    부녀: { 따기:dept('부녀',15), 실복:dept('부녀',23), 신카:dept('부녀',30) },
+    청년: { 따기:dept('청년',15), 실복:dept('청년',23), 신카:dept('청년',30) },
+  };
+}
+
+// ── 대시보드 업데이트
+function updateDashboard(d){
+  const p = (a,b)=> b>0 ? (a/b*100).toFixed(1) : '0';
+  const pi = (a,b)=> b>0 ? Math.round(a/b*100) : 0;
+
+  // data-f 속성으로 일괄 업데이트
+  const fields = {
+    'date':         d.dateStr,
+    'date2':        d.dateStr.replace(/\(.+\)/,'').trim(),
+    'shinka-status': d.신카 >= d.신카목표 ? '신카 목표 달성! 🎉' : `신카 진행 중 (${pi(d.신카,d.신카목표)}%)`,
+    'ddakgi-val':   `${d.따기}명`,
+    'ddakgi-sub':   `재적대비 ${p(d.따기,d.재적)}%`,
+    'ddakgi-note':  `재적 ${d.재적.toLocaleString()}명 기준`,
+    'sil-val':      `${d.실복방}명`,
+    'sil-sub':      `따기 대비 ${p(d.실복방,d.따기)}%`,
+    'sil-note':     d.실복방>=300 ? '목표 300명 달성! ✅' : `목표 300명까지 ${300-d.실복방}명 남음`,
+    'shinka-val':   `${d.신카}명`,
+    'shinka-sub':   `목표 ${d.신카목표}명 대비 ${p(d.신카,d.신카목표)}%`,
+    'shinka-note':  d.신카>=d.신카목표 ? '목표 초과달성! 🎉' : `목표까지 ${d.신카목표-d.신카}명 남음`,
+    'reg-val':      `${d.예상}명`,
+    'reg-sub':      `재적대비 ${p(d.예상,d.재적)}%`,
+    'reg-note':     '5월말 지파 순위 반영',
+    'pf-ddakgi':    `${d.따기}명`,
+    'pf-bokbang':   `${d.복방}명`,
+    'pf-sil':       `${d.실복방}명`,
+    'pf-shinka':    `${d.신카}명`,
+    'pf-reg':       `${d.예상}명`,
+    'judge-title':  d.신카>=d.신카목표
+      ? `🎉 신카 목표 달성! — ${d.신카}명 / 목표 ${d.신카목표}명 (${p(d.신카,d.신카목표)}%)`
+      : `📊 신카 진행 중 — ${d.신카}명 / 목표 ${d.신카목표}명 (${p(d.신카,d.신카목표)}%)`,
+    'judge-dept':   `부서별: 부녀 ${pi(d.부녀.실복,d.부녀.따기)}% ${pi(d.부녀.실복,d.부녀.따기)>=40?'✅':'⚠'} &nbsp; 청년 ${pi(d.청년.실복,d.청년.따기)}% ${pi(d.청년.실복,d.청년.따기)>=40?'✅':'⚠'} &nbsp; 장년 ${pi(d.장년.실복,d.장년.따기)}% ⚠ &nbsp; 자문 ${pi(d.자문.실복,d.자문.따기)}% ⚠`,
+    'dept-ja-pct':  `${pi(d.자문.실복,d.자문.따기)}%`,
+    'dept-ja-sub':  `따기 ${d.자문.따기}명 중 실복 ${d.자문.실복}명 ${d.자문.실복===0?'⚠':''}`,
+    'dept-jang-pct':`${pi(d.장년.실복,d.장년.따기)}%`,
+    'dept-jang-bar':`따기 ${d.장년.따기}명 → 실복 ${d.장년.실복}명`,
+    'dept-jang-sub':`신카접수 ${d.장년.신카}명`,
+    'dept-bu-pct':  `${pi(d.부녀.실복,d.부녀.따기)}%`,
+    'dept-bu-bar':  `따기 ${d.부녀.따기}명 → 실복 ${d.부녀.실복}명`,
+    'dept-bu-sub':  `신카접수 ${d.부녀.신카}명`,
+    'dept-chung-pct':`${pi(d.청년.실복,d.청년.따기)}%`,
+    'dept-chung-bar':`따기 ${d.청년.따기}명 → 실복 ${d.청년.실복}명`,
+    'dept-chung-sub':`신카접수 ${d.청년.신카}명`,
+    'tbl-shinka':   `${d.신카}/${d.신카목표}명`,
+    'tbl-rate':     `${p(d.신카,d.신카목표)}%`,
+    'rank-rate':    `${p(d.예상,d.재적)}%↑`,
+    'ana-good':     `신카 ${d.신카}/${d.신카목표}명 ${d.신카>=d.신카목표?'달성! 🎉':'진행 중'}\n실복방 ${d.실복방}명 / 부녀 ${pi(d.부녀.실복,d.부녀.따기)}% ✅ / 청년 ${pi(d.청년.실복,d.청년.따기)}% ✅\n따기 ${d.따기}명 — 재적대비 ${p(d.따기,d.재적)}%`,
+    'ana-bad':      `자문 실복방 ${d.자문.실복}명\n  (따기 ${d.자문.따기}명 중 ${d.자문.실복}명 연결)\n장년 전환율 ${pi(d.장년.실복,d.장년.따기)}%\n  (따기 ${d.장년.따기}명 중 ${d.장년.실복}명 연결)`,
+    'ana-next':     `자문·장년 실복방 집중 관리\n신카 ${d.신카목표}명 달성 → 5월 지파 순위 확정\n예상 등록 ${d.예상}명 (${p(d.예상,d.재적)}%)`,
+  };
+
+  for(const [k,v] of Object.entries(fields)){
+    document.querySelectorAll(`[data-f="${k}"]`).forEach(el=>{
+      if(v.includes('\n')) el.innerHTML = v.replace(/\n/g,'<br>');
+      else el.innerHTML = v;
+    });
+  }
+
+  // 바 업데이트
+  const setBar = (id, pct, color, text)=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.style.width = Math.max(0.3, Math.min(100, pct)) + '%';
+    el.style.background = color;
+    if(text !== undefined) el.textContent = text;
+  };
+  setBar('bar-ddakgi', 100, '#1a6e2e', `${d.따기}명`);
+  setBar('bar-bokbang', pi(d.복방,d.따기), '#7B1FA2', `${d.복방}명`);
+  setBar('bar-sil', pi(d.실복방,d.따기), '#5C1F92', `${d.실복방}명`);
+  setBar('bar-shinka', Math.min(100,pi(d.신카,d.신카목표)), '#1565C0', `${d.신카}명 — 목표${d.신카목표}명 ${d.신카>=d.신카목표?'초과달성!':'진행 중'}`);
+  setBar('bar-reg', pi(d.예상,d.따기)*3, '#e67e22', `${d.예상}명`);
+  setBar('bar-ja', pi(d.자문.실복,d.자문.따기)||0.3, '#bbb');
+  setBar('bar-jang', pi(d.장년.실복,d.장년.따기), '#e67e22');
+  setBar('bar-bu', pi(d.부녀.실복,d.부녀.따기), '#1a6e2e');
+  setBar('bar-chung', pi(d.청년.실복,d.청년.따기), '#1565C0');
+
+  // 퍼센트 텍스트
+  [['bar-ddakgi-pct','100%'],['bar-bokbang-pct',p(d.복방,d.따기)+'%'],
+   ['bar-sil-pct',p(d.실복방,d.따기)+'%'],['bar-shinka-pct',p(d.신카,d.신카목표)+'%'],
+   ['bar-reg-pct',p(d.예상,d.따기*3.33)+'%']].forEach(([k,v])=>{
+    document.querySelectorAll(`[data-f="${k}"]`).forEach(el=> el.textContent=v);
+  });
+}
+
+// ── GitHub 저장
+async function pushToGitHub(data){
+  const token = getToken();
+  if(!token){ showSettings(); setStatus('⚠ 먼저 GitHub 토큰을 설정해주세요'); return; }
+
+  setStatus('⏳ GitHub에 저장 중...');
+  document.getElementById('github-btn').disabled = true;
+
+  try{
+    // 현재 파일 SHA
+    const getRes = await fetch(
+      `https://api.github.com/repos/${REPO}/${REPO_NAME}/contents/${FILE}`,
+      { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' } }
+    );
+    if(!getRes.ok) throw new Error('파일 정보를 가져올 수 없습니다. 토큰을 확인해주세요.');
+    const info = await getRes.json();
+
+    // HTML 직렬화
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const encoded = btoa(unescape(encodeURIComponent(html)));
+
+    // 커밋
+    const today = new Date();
+    const msg = `대시보드 업데이트 ${today.getMonth()+1}/${today.getDate()} (${data.dateStr})`;
+    const putRes = await fetch(
+      `https://api.github.com/repos/${REPO}/${REPO_NAME}/contents/${FILE}`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: msg, content: encoded, sha: info.sha })
+      }
+    );
+
+    if(putRes.ok){
+      setStatus(`✅ GitHub 저장 완료! 1~2분 후 링크에 반영됩니다 → https://${REPO}.github.io/${REPO_NAME}/`);
+    } else {
+      const err = await putRes.json();
+      throw new Error(err.message || '알 수 없는 오류');
+    }
+  } catch(e){
+    setStatus('❌ 오류: ' + e.message);
+  } finally {
+    document.getElementById('github-btn').disabled = false;
+  }
+}
+</script>
 </body>
 </html>
