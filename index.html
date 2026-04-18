@@ -291,28 +291,47 @@ function loadExcel(file){
 
 // ── 강동 데이터 추출
 function extractGangdong(wb, filename){
-  // 날짜 파일명에서 추출 (4_16_목 형태)
+  // 날짜
   let dateStr = '날짜';
   const mDate = filename.match(/_(\d+)_([\uAC00-\uD7A3]+)_/);
   if(mDate) dateStr = `4. ${mDate[1]}.(${mDate[2]})`;
 
-  // 통계 시트 — col2=교회명 / col20=따기 / col26=복방 / col37=실복방 / col40=신카목표 / col42=신카예정
-  const sRows = XLSX.utils.sheet_to_json(wb.Sheets['통계']||wb.Sheets[wb.SheetNames[0]], {header:1, defval:0});
+  // 통계 시트
+  const wsName1 = wb.SheetNames[0];
+  const sRows = XLSX.utils.sheet_to_json(wb.Sheets[wsName1], {header:1, defval:0});
   let gRow = null;
   for(const row of sRows){
     if(row[2] && String(row[2]).includes('강동')){ gRow=row; break; }
   }
+  if(!gRow){
+    // 시트명이 다를 경우 모든 시트 탐색
+    for(const sn of wb.SheetNames){
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:0});
+      for(const row of rows){
+        for(let ci=0; ci<row.length; ci++){
+          if(row[ci] && String(row[ci]).includes('강동교회')){
+            setStatus('시트:'+sn+' / col'+ci+'에서 강동 발견');
+            gRow = row;
+            break;
+          }
+        }
+        if(gRow) break;
+      }
+      if(gRow) break;
+    }
+  }
   if(!gRow) return null;
 
-  // 교회별 시트 — col2=교회명 / col4=부서명 / col16=따기 / col24=실복방 / col30=신카
-  const dRows = XLSX.utils.sheet_to_json(wb.Sheets['교회별']||wb.Sheets[wb.SheetNames[1]], {header:1, defval:0});
+  // 교회별 시트
+  const wsName2 = wb.SheetNames[1] || wb.SheetNames[0];
+  const dRows = XLSX.utils.sheet_to_json(wb.Sheets[wsName2], {header:1, defval:0});
   const depts = {};
   let inG = false;
   for(const row of dRows){
     const ch = String(row[2]||'');
     const num = row[1];
     if(ch.includes('강동')) inG = true;
-    else if(num && num !== 0 && !ch.includes('합계')) inG = false;
+    else if(num && num !== 0 && typeof num === 'number') inG = false;
     if(inG){
       const d = String(row[4]||'');
       if(d.includes('자문')) depts.자문 = row;
