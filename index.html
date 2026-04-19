@@ -64,6 +64,66 @@ body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0
 </head>
 <body>
 
+<!-- 🔒 비밀번호 잠금 화면 -->
+<div id="lockScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a6e2e 0%,#164a24 100%);z-index:99999;display:flex;align-items:center;justify-content:center;font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif">
+  <div style="background:#fff;border-radius:12px;padding:36px 42px;box-shadow:0 10px 40px rgba(0,0,0,.3);max-width:360px;width:90%">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:40px;margin-bottom:10px">🔒</div>
+      <div style="font-size:18px;font-weight:700;color:#1a6e2e;margin-bottom:4px">강동교회 대시보드</div>
+      <div style="font-size:12px;color:#888">비밀번호를 입력해주세요</div>
+    </div>
+    <input type="password" id="pwInput" placeholder="비밀번호" style="width:100%;padding:12px 14px;border:1.5px solid #ccc;border-radius:8px;font-size:14px;font-family:inherit;outline:none" onkeydown="if(event.key==='Enter') checkPassword()">
+    <button onclick="checkPassword()" style="width:100%;margin-top:12px;background:#1a6e2e;color:#fff;border:0;border-radius:8px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">입장</button>
+    <div id="pwError" style="color:#B71C1C;font-size:11px;text-align:center;margin-top:10px;min-height:16px"></div>
+    <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:#666;margin-top:14px;cursor:pointer">
+      <input type="checkbox" id="rememberPw" style="cursor:pointer"> 이 브라우저에서 7일간 기억
+    </label>
+  </div>
+</div>
+
+<script>
+// 🔒 비밀번호 설정 (변경하려면 아래 PASSWORD 값만 바꾸세요)
+const PASSWORD = '920921';
+
+// 세션 체크
+function checkAuth(){
+  const saved = localStorage.getItem('gd_auth');
+  if (saved){
+    const [token, expiry] = saved.split('|');
+    if (token === btoa(PASSWORD) && Date.now() < parseInt(expiry)){
+      document.getElementById('lockScreen').style.display = 'none';
+      return true;
+    }
+    localStorage.removeItem('gd_auth');
+  }
+  // 포커스는 잠금 해제된 경우에만
+  setTimeout(() => {
+    const inp = document.getElementById('pwInput');
+    if (inp) inp.focus();
+  }, 100);
+  return false;
+}
+
+function checkPassword(){
+  const inp = document.getElementById('pwInput').value;
+  const err = document.getElementById('pwError');
+  if (inp === PASSWORD){
+    if (document.getElementById('rememberPw').checked){
+      const expiry = Date.now() + 7*24*60*60*1000; // 7일
+      localStorage.setItem('gd_auth', btoa(PASSWORD) + '|' + expiry);
+    }
+    document.getElementById('lockScreen').style.display = 'none';
+    err.textContent = '';
+  } else {
+    err.textContent = '❌ 비밀번호가 틀렸습니다';
+    document.getElementById('pwInput').value = '';
+  }
+}
+
+// 페이지 로드 시 인증 확인
+checkAuth();
+</script>
+
 <!-- 헤더 -->
 <div class="hd">
   <div class="hd-l">
