@@ -57,7 +57,7 @@ body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0
 .abc-a{background:#1a6e2e;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .abc-b{background:#66BB6A;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .abc-c{background:#FFCA28;color:#5D4037;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.abc-tot{width:92px;font-size:11px;font-weight:700;flex-shrink:0}
+.abc-tot{width:110px;font-size:11px;font-weight:700;flex-shrink:0}
 .abc-legend{display:flex;gap:14px;font-size:10px;color:#666;margin:2px 0 8px 63px}
 .abc-legend span::before{content:'■ ';font-size:11px}
 </style>
@@ -139,13 +139,13 @@ body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f0
     <span style="color:#FFCA28">C급 (초기 접촉)</span>
   </div>
   <div id="abc-chart">
-    <!-- JS로 주입. 기본값으로 4/17 데이터 표시 -->
-    <div class="abc-row"><div class="abc-lbl">안산</div><div class="abc-bar"><div class="abc-a" style="width:76.0%">57 (76%)</div><div class="abc-b" style="width:12.0%">9</div></div><div class="abc-tot">75명 · <span class="grn">AB 88%</span></div></div>
-    <div class="abc-row"><div class="abc-lbl">성남</div><div class="abc-bar"><div class="abc-a" style="width:37.9%">106 (38%)</div><div class="abc-b" style="width:36.1%">101 (36%)</div><div class="abc-c" style="width:26.1%">73</div></div><div class="abc-tot">280명 · <span class="grn">AB 74%</span></div></div>
-    <div class="abc-row"><div class="abc-lbl">수원</div><div class="abc-bar"><div class="abc-a" style="width:29.4%">57 (29%)</div><div class="abc-b" style="width:33.5%">65 (34%)</div><div class="abc-c" style="width:37.1%">72</div></div><div class="abc-tot">194명 · <span class="grn">AB 63%</span></div></div>
-    <div class="abc-row"><div class="abc-lbl">과천</div><div class="abc-bar"><div class="abc-a" style="width:26.9%">110 (27%)</div><div class="abc-b" style="width:40.3%">165 (40%)</div><div class="abc-c" style="width:26.7%">109</div></div><div class="abc-tot">409명 · <span class="grn">AB 67%</span></div></div>
-    <div class="abc-row" style="background:#e8f5e9;border-radius:6px;padding:3px 0"><div class="abc-lbl" style="color:#1a6e2e;font-weight:700">★ 강동</div><div class="abc-bar"><div class="abc-a" style="width:15.6%">67 (16%)</div><div class="abc-b" style="width:54.2%">233 (54%)</div><div class="abc-c" style="width:30.2%">130 (30%)</div></div><div class="abc-tot" style="color:#1a6e2e;font-weight:700">430명 · AB 70%</div></div>
-    <div class="abc-row"><div class="abc-lbl">평택</div><div class="abc-bar"><div class="abc-a" style="width:8.0%">7</div><div class="abc-b" style="width:67.0%">59 (67%)</div><div class="abc-c" style="width:25.0%">22</div></div><div class="abc-tot">88명 · AB 75%</div></div>
+    <!-- JS로 주입. 기본값: 4/18 재적대비 순 -->
+    <div class="abc-row" style="background:#e8f5e9;border-radius:6px;padding:3px 0"><div class="abc-lbl" style="color:#1a6e2e;font-weight:700">★ 강동</div><div class="abc-bar"><div class="abc-a" style="width:15.5%">70 (16%)</div><div class="abc-b" style="width:52.5%">238 (53%)</div><div class="abc-c" style="width:32.0%">145 (32%)</div></div><div class="abc-tot" style="color:#1a6e2e;font-weight:700">453명 · <span class="grn">재적 8.91%</span></div></div>
+    <div class="abc-row"><div class="abc-lbl">평택</div><div class="abc-bar"><div class="abc-a" style="width:6.0%">5</div><div class="abc-b" style="width:69.0%">58 (69%)</div><div class="abc-c" style="width:25.0%">21</div></div><div class="abc-tot">84명 · <span class="grn">재적 6.18%</span></div></div>
+    <div class="abc-row"><div class="abc-lbl">성남</div><div class="abc-bar"><div class="abc-a" style="width:38.2%">116 (38%)</div><div class="abc-b" style="width:33.6%">102 (34%)</div><div class="abc-c" style="width:28.3%">86</div></div><div class="abc-tot">304명 · <span class="grn">재적 5.67%</span></div></div>
+    <div class="abc-row"><div class="abc-lbl">동탄</div><div class="abc-bar"><div class="abc-a" style="width:3.0%">2</div><div class="abc-b" style="width:55.2%">37 (55%)</div><div class="abc-c" style="width:41.8%">28</div></div><div class="abc-tot">67명 · <span class="grn">재적 5.34%</span></div></div>
+    <div class="abc-row"><div class="abc-lbl">수원</div><div class="abc-bar"><div class="abc-a" style="width:29.3%">56 (29%)</div><div class="abc-b" style="width:33.5%">64 (34%)</div><div class="abc-c" style="width:37.2%">71 (37%)</div></div><div class="abc-tot">191명 · <span class="grn">재적 5.30%</span></div></div>
+    <div class="abc-row"><div class="abc-lbl">안산</div><div class="abc-bar"><div class="abc-a" style="width:62.9%">78 (63%)</div><div class="abc-b" style="width:26.6%">33 (27%)</div><div class="abc-c" style="width:10.5%">13</div></div><div class="abc-tot">124명 · <span class="grn">재적 4.54%</span></div></div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px">
     <div style="background:#FFF8E1;border-left:3px solid #FFA726;border-radius:7px;padding:8px 11px;font-size:10.5px;line-height:1.85">
@@ -259,7 +259,11 @@ const FILE_PATH='index.html';
 const $ = id => document.getElementById(id);
 const setStatus = msg => { $('status').textContent = msg; };
 const fmt = (n, d=0) => Number(n).toFixed(d);
-const pct = n => (n*100).toFixed(1) + '%';
+const pct = n => {
+  const v = Number(n);
+  if (!isFinite(v) || isNaN(v)) return '0.0%';
+  return (v*100).toFixed(1) + '%';
+};
 
 // 모든 data-f 대상 일괄 업데이트
 function setField(key, value){
@@ -310,7 +314,13 @@ $('fileInput').addEventListener('change', async e => {
 
 function cellVal(ws, addr){
   const c = ws[addr];
-  return c ? c.v : 0;
+  if (!c) return 0;
+  const v = c.v;
+  // 엑셀 에러 (#DIV/0!, #N/A 등) → 0 처리
+  if (typeof v === 'string' && v.startsWith('#')) return 0;
+  // NaN, Infinity → 0
+  if (typeof v === 'number' && !isFinite(v)) return 0;
+  return v === undefined || v === null ? 0 : v;
 }
 
 function parseWorkbook(wb, dateStr){
@@ -531,15 +541,10 @@ function updateDashboard(d){
 }
 
 function renderABC(churches, gang){
-  // 대형교회 우선: sil_total > 50 정렬
+  // 재적대비 실복 기준 정렬 (내림차순) + 하남 같은 0명 교회 제외
   const show = churches
-    .filter(c => c.sil_total >= 50)
-    .sort((a,b) => {
-      // 강동을 중앙(4번째)쯤 배치 위해 A급 비율 내림차순
-      const aR = a.sil_total ? a.sil_A/a.sil_total : 0;
-      const bR = b.sil_total ? b.sil_A/b.sil_total : 0;
-      return bR - aR;
-    });
+    .filter(c => (c.sil_total || 0) > 0)
+    .sort((a,b) => (b.sil_jj||0) - (a.sil_jj||0));
   const container = $('abc-chart');
   container.innerHTML = show.map(c => {
     const aR = c.sil_total ? c.sil_A/c.sil_total : 0;
@@ -551,6 +556,7 @@ function renderABC(churches, gang){
     const lblStyle = isGang ? 'style="color:#1a6e2e;font-weight:700"' : '';
     const totStyle = isGang ? 'style="color:#1a6e2e;font-weight:700"' : '';
     const lbl = isGang ? '★ 강동' : c.name;
+    const jjPct = ((c.sil_jj||0)*100).toFixed(2);
     return `
       <div class="abc-row" ${rowStyle}>
         <div class="abc-lbl" ${lblStyle}>${lbl}</div>
@@ -559,15 +565,25 @@ function renderABC(churches, gang){
           ${bR > 0 ? `<div class="abc-b" style="width:${(bR*100).toFixed(1)}%">${c.sil_B}${bR>0.15 ? ' ('+Math.round(bR*100)+'%)' : ''}</div>` : ''}
           ${cR > 0 ? `<div class="abc-c" style="width:${(cR*100).toFixed(1)}%">${c.sil_C}${cR>0.15 ? ' ('+Math.round(cR*100)+'%)' : ''}</div>` : ''}
         </div>
-        <div class="abc-tot" ${totStyle}>${c.sil_total}명 · <span class="grn">AB ${Math.round(abR*100)}%</span></div>
+        <div class="abc-tot" ${totStyle}>${c.sil_total}명 · <span class="grn">재적 ${jjPct}%</span></div>
       </div>
     `;
   }).join('');
 }
 
 function renderRankTables(d){
-  // 신카 달성률 순위
-  const bySinka = [...d.churches].sort((a,b) => (b.sinka_mokdae||0) - (a.sinka_mokdae||0));
+  // 신카 달성률 순위 (목표 0 또는 이상한 값인 교회는 제외)
+  const active = d.churches.filter(c => {
+    const mok = c.sinka_mok || 0;
+    const rate = c.sinka_mokdae || 0;
+    // 목표가 0이면 제외 (하남 등 개강 없는 교회)
+    if (mok === 0) return false;
+    // 달성률이 500% 초과면 데이터 오류로 간주
+    if (rate > 5) return false;
+    return true;
+  });
+  const inactive = d.churches.filter(c => !active.includes(c));
+  const bySinka = active.sort((a,b) => (b.sinka_mokdae||0) - (a.sinka_mokdae||0));
   let html1 = '<tr><th>순위</th><th class="tL">교회</th><th>현/목표</th><th>달성률</th></tr>';
   bySinka.forEach((c, i) => {
     const isG = c.name === '강동';
@@ -575,6 +591,10 @@ function renderRankTables(d){
     const mark = isG ? '★' : '';
     const color = c.sinka_mokdae >= 1 ? 'grn' : c.sinka_mokdae >= 0.7 ? 'blu' : 'org';
     html1 += `<tr${cls}><td>${mark}${i+1}위</td><td class="tL">${c.name}</td><td>${c.sinka_total}/${c.sinka_mok}</td><td class="${color}" style="font-weight:700">${pct(c.sinka_mokdae||0)}</td></tr>`;
+  });
+  // 목표 없는 교회 (하남 등) 표시
+  inactive.forEach(c => {
+    html1 += `<tr><td style="color:#bbb">—</td><td class="tL" style="color:#bbb">${c.name}</td><td style="color:#bbb">개강 없음</td><td style="color:#bbb">—</td></tr>`;
   });
   $('tbl-sinka').querySelector('tbody').innerHTML = html1;
 
