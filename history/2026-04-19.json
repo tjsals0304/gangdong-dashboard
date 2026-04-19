@@ -1,0 +1,145 @@
+{
+  "date": "2026-04-19",
+  "dateStr": "신 43(2026). 4. 18.(토) 기준",
+  "gang": {
+    "ttagi": 862,
+    "ttagi_jj": 0.16948486040110106,
+    "sil": 453,
+    "sil_jj": 0.08906802988596146,
+    "sil_A": 70,
+    "sil_B": 238,
+    "sil_C": 145,
+    "sinka": 289,
+    "sinka_mok": 254,
+    "sinka_mokdae": 1.1377952755905512
+  },
+  "ranks": {
+    "ttagi": 1,
+    "sil": 1,
+    "sinka": 4,
+    "a": 6
+  },
+  "churches": [
+    {
+      "name": "과천",
+      "sil": 410,
+      "sil_jj": 0.024791389527149595,
+      "sil_A": 121,
+      "sil_B": 165,
+      "sil_C": 124,
+      "sinka": 342,
+      "sinka_mok": 423,
+      "sinka_mokdae": 0.8085106382978723
+    },
+    {
+      "name": "성남",
+      "sil": 304,
+      "sil_jj": 0.05666356011183597,
+      "sil_A": 116,
+      "sil_B": 102,
+      "sil_C": 86,
+      "sinka": 304,
+      "sinka_mok": 258,
+      "sinka_mokdae": 1.178294573643411
+    },
+    {
+      "name": "강동",
+      "sil": 453,
+      "sil_jj": 0.08906802988596146,
+      "sil_A": 70,
+      "sil_B": 238,
+      "sil_C": 145,
+      "sinka": 289,
+      "sinka_mok": 254,
+      "sinka_mokdae": 1.1377952755905512
+    },
+    {
+      "name": "수원",
+      "sil": 191,
+      "sil_jj": 0.05304082199389058,
+      "sil_A": 56,
+      "sil_B": 64,
+      "sil_C": 71,
+      "sinka": 204,
+      "sinka_mok": 148,
+      "sinka_mokdae": 1.3783783783783783
+    },
+    {
+      "name": "안산",
+      "sil": 124,
+      "sil_jj": 0.04543788933675339,
+      "sil_A": 78,
+      "sil_B": 33,
+      "sil_C": 13,
+      "sinka": 110,
+      "sinka_mok": 110,
+      "sinka_mokdae": 1
+    },
+    {
+      "name": "평택",
+      "sil": 84,
+      "sil_jj": 0.061764705882352944,
+      "sil_A": 5,
+      "sil_B": 58,
+      "sil_C": 21,
+      "sinka": 68,
+      "sinka_mok": 68,
+      "sinka_mokdae": 1
+    },
+    {
+      "name": "이천",
+      "sil": 50,
+      "sil_jj": 0.03897116134060795,
+      "sil_A": 5,
+      "sil_B": 15,
+      "sil_C": 30,
+      "sinka": 50,
+      "sinka_mok": 50,
+      "sinka_mokdae": 1
+    },
+    {
+      "name": "수지",
+      "sil": 40,
+      "sil_jj": 0.019184652278177457,
+      "sil_A": 4,
+      "sil_B": 20,
+      "sil_C": 16,
+      "sinka": 89,
+      "sinka_mok": 120,
+      "sinka_mokdae": 0.7416666666666667
+    },
+    {
+      "name": "왕십리",
+      "sil": 11,
+      "sil_jj": 0.013924050632911392,
+      "sil_A": 2,
+      "sil_B": 2,
+      "sil_C": 7,
+      "sinka": 25,
+      "sinka_mok": 25,
+      "sinka_mokdae": 1
+    },
+    {
+      "name": "동탄",
+      "sil": 67,
+      "sil_jj": 0.05338645418326693,
+      "sil_A": 2,
+      "sil_B": 37,
+      "sil_C": 28,
+      "sinka": 60,
+      "sinka_mok": 60,
+      "sinka_mokdae": 1
+    },
+    {
+      "name": "하남",
+      "sil": 0,
+      "sil_jj": 0,
+      "sil_A": 0,
+      "sil_B": 0,
+      "sil_C": 0,
+      "sinka": 0,
+      "sinka_mok": 0,
+      "sinka_mokdae": 7
+    }
+  ]
+}
